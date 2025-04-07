@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library_db
+    driverClassName: org.postgresql.Driver
+    username: admin
+    password: admin
+  jpa:
+    databasePlatform: org.hibernate.dialect.PostgreSQLDialect
+    deferDatasourceInitialization: true
+    showSql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
