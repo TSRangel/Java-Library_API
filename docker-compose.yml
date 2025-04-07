@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres_jpa_course
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: jpa_course
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_jpa_course
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - postgres_network
+    ports:
+      - "5050:80"
+volumes:
+  db_data:
+networks:
+  postgres_network:
