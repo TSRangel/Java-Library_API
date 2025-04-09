@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres
-    container_name: postgres_jpa_course
+    container_name: postgres_library_db
     restart: always
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
-      POSTGRES_DB: jpa_course
+      POSTGRES_DB: library_db
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -15,7 +15,7 @@ services:
       - "5432:5432"
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_jpa_course
+    container_name: pgadmin_library_client
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
