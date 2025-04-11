@@ -21,9 +21,14 @@ public class AuthorController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<AuthorResponseDTO> getAuthorById(@PathVariable String id) {
         return ResponseEntity.ok().body(authorService.findById(id));
+    }
+
+    @GetMapping("name/{name}")
+    public ResponseEntity<AuthorResponseDTO> getAuthorByName(@PathVariable String name) {
+        return ResponseEntity.ok().body(authorService.findByName(name));
     }
 
     @GetMapping

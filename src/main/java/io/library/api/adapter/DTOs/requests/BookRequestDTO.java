@@ -10,5 +10,5 @@ public record BookRequestDTO(
         LocalDate publicationDate,
         Genre genre,
         Double price,
-        String authorId
+        String authorName
 ) {}

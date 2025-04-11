@@ -27,7 +27,7 @@ public class Book extends BaseEntity{
     private Genre genre;
     private Price price;
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_author"))
     private Author author;
 
     public Book(String isbn, String title, LocalDate publicationDate, Genre genre, Double price, Author author) {

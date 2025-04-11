@@ -28,6 +28,12 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
+    public AuthorResponseDTO findByName(String name) {
+        Author author = authorRepository.findByNameContaining(name)
+                .orElseThrow(() -> new IllegalArgumentException("Autor não encontrado nos registros."));
+        return authorMapper.toDTO(author);
+    }
+
     public List<AuthorResponseDTO> findAll() {
         return authorRepository.findAll().stream().map(authorMapper::toDTO).toList();
     }

@@ -24,7 +24,7 @@ public class BookService {
     private final AuthorMapper authorMapper;
 
     public void create(BookRequestDTO request) {
-        Author author = authorMapper.toDomainFromResponseDTO(authorService.findById(request.authorId()));
+        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(request.authorName()));
         Book newBook = bookMapper.toDomain(request);
         newBook.setAuthor(author);
         bookRepository.save(newBook);
