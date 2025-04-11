@@ -5,13 +5,13 @@ import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.domain.entities.Author;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", uses = {BookMapper.class})
+@Mapper(componentModel = "spring",
+        uses = {BookMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface AuthorMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "books", ignore = true)
     Author toDomain(AuthorRequestDTO dto);
     @Mapping(target = "books", source = "books")
     Author toDomainFromResponseDTO(AuthorResponseDTO dto);

@@ -6,14 +6,12 @@ import io.library.api.domain.entities.Book;
 import io.library.api.domain.valueObjects.ISBN;
 import io.library.api.domain.valueObjects.Price;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public interface BookMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "author", ignore = true)
     Book toDomain(BookRequestDTO dto);
     BookResponseDTO toDTO(Book book);
 

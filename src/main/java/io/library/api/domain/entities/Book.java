@@ -20,11 +20,16 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "tb_book")
 public class Book extends BaseEntity{
+    @Column(nullable = false)
     private ISBN isbn;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private LocalDate publicationDate;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
+    @Column(nullable = false)
     private Price price;
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_author"))

@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +20,10 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
-    public void create(AuthorRequestDTO dto) {
-        authorRepository.save(authorMapper.toDomain(dto));
+    public Author create(AuthorRequestDTO dto) {
+        Author newAuthor = authorMapper.toDomain(dto);
+        authorRepository.save(newAuthor);
+        return newAuthor;
     }
 
     public AuthorResponseDTO findById(String id) {
@@ -34,7 +38,7 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    public List<AuthorResponseDTO> findAll() {
-        return authorRepository.findAll().stream().map(authorMapper::toDTO).toList();
+    public Set<AuthorResponseDTO> findAll() {
+        return authorRepository.findAll().stream().map(authorMapper::toDTO).collect(Collectors.toSet());
     }
 }

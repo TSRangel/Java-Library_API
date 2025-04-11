@@ -1,5 +1,6 @@
 package io.library.api.domain.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -18,8 +19,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_author")
 public class Author extends BaseEntity{
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private LocalDate birthDate;
+    @Column(nullable = false)
     private String nationality;
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "author")
