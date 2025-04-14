@@ -1,9 +1,6 @@
 package io.library.api.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -26,7 +23,7 @@ public class Author extends BaseEntity{
     @Column(nullable = false)
     private String nationality;
     @Setter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private Set<Book> books = new HashSet<>();
 
     public Author(UUID id, String name, LocalDate birthDate, String nationality) {

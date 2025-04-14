@@ -29,18 +29,19 @@ public class AuthorController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<AuthorResponseDTO> getAuthorById(@PathVariable String id) {
-        return ResponseEntity.ok().body(authorService.findById(id));
+    @GetMapping
+    public ResponseEntity<Set<AuthorResponseDTO>> getAll() {
+        return ResponseEntity.ok().body(authorService.findAll());
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/{name}")
     public ResponseEntity<AuthorResponseDTO> getAuthorByName(@PathVariable String name) {
         return ResponseEntity.ok().body(authorService.findByName(name));
     }
 
-    @GetMapping
-    public ResponseEntity<Set<AuthorResponseDTO>> getAll() {
-        return ResponseEntity.ok().body(authorService.findAll());
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Void> deleteByName(@PathVariable String name) {
+        authorService.deleteByName(name);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -23,8 +23,8 @@ public class BookController {
         Book newBook = bookService.create(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/id/{id}")
-                .buildAndExpand(newBook.getId())
+                .path("/{title}")
+                .buildAndExpand(newBook.getTitle())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
@@ -34,13 +34,14 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.findAll());
     }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable String id) {
-        return ResponseEntity.ok().body(bookService.findById(id));
-    }
-
-    @GetMapping("/title/{title}")
+    @GetMapping("/{title}")
     public ResponseEntity<BookResponseDTO> getBookByTitle(@PathVariable String title) {
         return ResponseEntity.ok().body(bookService.findByTitle(title));
+    }
+
+    @DeleteMapping("/{title}")
+    public ResponseEntity<Void> deleteByTitle(@PathVariable String title) {
+        bookService.deleteByTitle(title);
+        return ResponseEntity.noContent().build();
     }
 }
