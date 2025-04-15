@@ -4,15 +4,17 @@ import io.library.api.domain.valueObjects.Price;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+import java.math.BigDecimal;
+
 @Converter(autoApply = true)
-public class PriceConverter implements AttributeConverter<Price, Double> {
+public class PriceConverter implements AttributeConverter<Price, BigDecimal> {
     @Override
-    public Double convertToDatabaseColumn(Price attribute) {
+    public BigDecimal convertToDatabaseColumn(Price attribute) {
         return attribute == null ? null : attribute.value();
     }
 
     @Override
-    public Price convertToEntityAttribute(Double dbData) {
+    public Price convertToEntityAttribute(BigDecimal dbData) {
         return dbData == null ? null : new Price(dbData);
     }
 }

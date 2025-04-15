@@ -3,7 +3,7 @@ package io.library.api.adapter.controllers;
 import io.library.api.adapter.DTOs.requests.AuthorRequestDTO;
 import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.application.services.AuthorService;
-import io.library.api.domain.entities.Author;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +19,12 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<Void> createAuthor(@RequestBody AuthorRequestDTO request) {
-        Author newAuthor = authorService.create(request);
+    public ResponseEntity<Void> createAuthor(@RequestBody @Valid AuthorRequestDTO request) {
+        AuthorResponseDTO newAuthor = authorService.create(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/id/{id}")
-                .buildAndExpand(newAuthor.getId())
+                .path("/{name}")
+                .buildAndExpand(newAuthor.name())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
@@ -40,8 +40,14 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteByName(@PathVariable String name) {
+    public ResponseEntity<Void> delete(@PathVariable String name) {
         authorService.deleteByName(name);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody @Valid AuthorRequestDTO request) {
+        authorService.updateByName(request);
         return ResponseEntity.noContent().build();
     }
 }

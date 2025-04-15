@@ -8,6 +8,8 @@ import io.library.api.domain.valueObjects.Price;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.math.BigDecimal;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
@@ -23,11 +25,11 @@ public interface BookMapper {
         return new ISBN(isbn);
     }
 
-    default Double map(Price price) {
+    default BigDecimal map(Price price) {
         return price.value();
     }
 
-    default Price map(Double price) {
+    default Price map(BigDecimal price) {
         return new Price(price);
     }
 }

@@ -1,8 +1,10 @@
 package io.library.api.domain.valueObjects;
 
-public record Price(double value) {
+import java.math.BigDecimal;
+
+public record Price(BigDecimal value) {
     public Price {
-        if (value < 0) {
+        if (value.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("O preço não pode ser negativo.");
         }
     }

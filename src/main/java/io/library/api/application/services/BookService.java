@@ -9,6 +9,7 @@ import io.library.api.application.services.exceptions.ResourceAlreadyExistsExcep
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import io.library.api.domain.entities.Author;
 import io.library.api.domain.entities.Book;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,8 @@ public class BookService {
     private final BookMapper bookMapper;
     private final AuthorMapper authorMapper;
 
-    public Book create(BookRequestDTO request) {
+    @Transactional
+    public BookResponseDTO create(BookRequestDTO request) {
         Book newBook = bookMapper.toDomain(request);
 
         if(bookRepository.findByTitleContaining(newBook.getTitle()).isPresent()) {
@@ -34,7 +36,7 @@ public class BookService {
         Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(request.authorName()));
         newBook.setAuthor(author);
         bookRepository.save(newBook);
-        return newBook;
+        return bookMapper.toDTO(newBook);
     }
 
     public BookResponseDTO findByTitle(String title) {
@@ -47,6 +49,7 @@ public class BookService {
         return bookRepository.findAll().stream().map(bookMapper::toDTO).collect(Collectors.toSet());
     }
 
+    @Transactional
     public void deleteByTitle(String title) {
         Optional<Book> book = bookRepository.findByTitleContaining(title);
 
@@ -55,5 +58,17 @@ public class BookService {
         }
 
         bookRepository.delete(book.get());
+    }
+
+    @Transactional
+    public void updateByName(BookRequestDTO dto) {
+        Book book = bookRepository.findByTitleContaining(dto.title())
+                .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
+
+        Book newBook = bookMapper.toDomain(dto);
+        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
+        newBook.setAuthor(author);
+        newBook.setId(book.getId());
+        bookRepository.save(newBook);
     }
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -22,20 +23,20 @@ import java.time.LocalDate;
 public class Book extends BaseEntity{
     @Column(nullable = false)
     private ISBN isbn;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
     private String title;
     @Column(nullable = false)
     private LocalDate publicationDate;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 12, scale = 2)
     private Price price;
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_book_author"))
     private Author author;
 
-    public Book(String isbn, String title, LocalDate publicationDate, Genre genre, Double price, Author author) {
+    public Book(String isbn, String title, LocalDate publicationDate, Genre genre, BigDecimal price, Author author) {
         this.isbn = new ISBN(isbn);
         this.title = title;
         this.publicationDate = publicationDate;

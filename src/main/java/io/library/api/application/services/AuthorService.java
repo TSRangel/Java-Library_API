@@ -7,6 +7,7 @@ import io.library.api.application.repositories.AuthorRepository;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import io.library.api.domain.entities.Author;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +21,15 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
-    public Author create(AuthorRequestDTO dto) {
+    @Transactional
+    public AuthorResponseDTO create(AuthorRequestDTO dto) {
         Author newAuthor = authorMapper.toDomain(dto);
 
         if(authorRepository.findByNameContaining(newAuthor.getName()).isPresent()) {
             throw new ResourceAlreadyExistsException("Author já registrado.");
         }
-
         authorRepository.save(newAuthor);
-        return newAuthor;
+        return authorMapper.toDTO(newAuthor);
     }
 
     public AuthorResponseDTO findByName(String name) {
@@ -41,6 +42,7 @@ public class AuthorService {
         return authorRepository.findAll().stream().map(authorMapper::toDTO).collect(Collectors.toSet());
     }
 
+    @Transactional
     public void deleteByName(String name) {
         Optional<Author> author = authorRepository.findByNameContaining(name);
 
@@ -50,4 +52,15 @@ public class AuthorService {
 
         authorRepository.delete(author.get());
     }
+
+    @Transactional
+    public void updateByName(AuthorRequestDTO dto) {
+        Author author = authorRepository.findByNameContaining(dto.name())
+                .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
+
+        Author newAuthor = authorMapper.toDomain(dto);
+        newAuthor.setId(author.getId());
+        authorRepository.save(newAuthor);
+    }
+
 }

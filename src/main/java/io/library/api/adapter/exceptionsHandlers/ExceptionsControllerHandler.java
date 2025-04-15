@@ -1,15 +1,20 @@
 package io.library.api.adapter.exceptionsHandlers;
 
+import io.library.api.adapter.exceptionsHandlers.errors.FieldError;
 import io.library.api.adapter.exceptionsHandlers.errors.StandartError;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
 public class ExceptionsControllerHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandartError> notFound(ResourceNotFoundException e, HttpServletRequest request) {
@@ -33,5 +38,20 @@ public class ExceptionsControllerHandler {
                     e.getMessage(),
                     request.getRequestURI()
                 ));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<FieldError> fieldValidation(MethodArgumentNotValidException e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HashMap<String, String> errors = new HashMap<>();
+
+        e.getBindingResult().getFieldErrors()
+                .forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
+
+        return ResponseEntity.status(status).body(new FieldError(
+                status.value(),
+                "Erro de validação de campos",
+                errors
+        ));
     }
 }

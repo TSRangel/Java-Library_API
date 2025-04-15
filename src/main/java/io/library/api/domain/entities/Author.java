@@ -16,11 +16,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_author")
 public class Author extends BaseEntity{
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
     private String name;
     @Column(nullable = false)
     private LocalDate birthDate;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 70)
     private String nationality;
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
