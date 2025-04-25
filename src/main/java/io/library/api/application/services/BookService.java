@@ -1,5 +1,6 @@
 package io.library.api.application.services;
 
+import io.library.api.adapter.DTOs.requests.BookFilterDTO;
 import io.library.api.adapter.DTOs.requests.BookRequestDTO;
 import io.library.api.adapter.DTOs.responses.BookResponseDTO;
 import io.library.api.adapter.mappers.AuthorMapper;
@@ -7,6 +8,7 @@ import io.library.api.adapter.mappers.BookMapper;
 import io.library.api.application.repositories.BookRepository;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
+import io.library.api.application.specifications.BookSpecification;
 import io.library.api.domain.entities.Author;
 import io.library.api.domain.entities.Book;
 import jakarta.transaction.Transactional;
@@ -45,8 +47,9 @@ public class BookService {
         return bookMapper.toDTO(book);
     }
 
-    public Set<BookResponseDTO> findAll() {
-        return bookRepository.findAll().stream().map(bookMapper::toDTO).collect(Collectors.toSet());
+    public Set<BookResponseDTO> findAll(BookFilterDTO dto) {
+        return bookRepository.findAll(BookSpecification.filterSpecification(dto))
+                .stream().map(bookMapper::toDTO).collect(Collectors.toSet());
     }
 
     @Transactional

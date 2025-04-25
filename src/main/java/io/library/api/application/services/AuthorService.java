@@ -1,11 +1,13 @@
 package io.library.api.application.services;
 
+import io.library.api.adapter.DTOs.requests.AuthorFilterDTO;
 import io.library.api.adapter.DTOs.requests.AuthorRequestDTO;
 import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.adapter.mappers.AuthorMapper;
 import io.library.api.application.repositories.AuthorRepository;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
+import io.library.api.application.specifications.AuthorSpecification;
 import io.library.api.domain.entities.Author;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +40,9 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    public Set<AuthorResponseDTO> findAll() {
-        return authorRepository.findAll().stream().map(authorMapper::toDTO).collect(Collectors.toSet());
+    public Set<AuthorResponseDTO> findAll(AuthorFilterDTO dto) {
+        return authorRepository.findAll(AuthorSpecification.filterSpecification(dto))
+                .stream().map(authorMapper::toDTO).collect(Collectors.toSet());
     }
 
     @Transactional

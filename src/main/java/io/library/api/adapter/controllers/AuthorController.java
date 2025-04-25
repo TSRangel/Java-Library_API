@@ -1,5 +1,6 @@
 package io.library.api.adapter.controllers;
 
+import io.library.api.adapter.DTOs.requests.AuthorFilterDTO;
 import io.library.api.adapter.DTOs.requests.AuthorRequestDTO;
 import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.application.services.AuthorService;
@@ -30,8 +31,8 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<AuthorResponseDTO>> getAll() {
-        return ResponseEntity.ok().body(authorService.findAll());
+    public ResponseEntity<Set<AuthorResponseDTO>> getAll(@ModelAttribute AuthorFilterDTO request) {
+        return ResponseEntity.ok().body(authorService.findAll(request));
     }
 
     @GetMapping("/{name}")

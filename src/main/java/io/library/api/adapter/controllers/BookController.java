@@ -1,9 +1,9 @@
 package io.library.api.adapter.controllers;
 
+import io.library.api.adapter.DTOs.requests.BookFilterDTO;
 import io.library.api.adapter.DTOs.requests.BookRequestDTO;
 import io.library.api.adapter.DTOs.responses.BookResponseDTO;
 import io.library.api.application.services.BookService;
-import io.library.api.domain.entities.Book;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<BookResponseDTO>> getAllBooks() {
-        return ResponseEntity.ok().body(bookService.findAll());
+    public ResponseEntity<Set<BookResponseDTO>> getAllBooks(@ModelAttribute BookFilterDTO request) {
+        return ResponseEntity.ok().body(bookService.findAll(request));
     }
 
     @GetMapping("/{title}")
