@@ -14,11 +14,13 @@ import io.library.api.domain.entities.Book;
 import io.library.api.domain.valueObjects.ISBN;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,9 +50,9 @@ public class BookService {
         return bookMapper.toDTO(book);
     }
 
-    public Set<BookResponseDTO> findAll(BookFilterDTO dto) {
-        return bookRepository.findAll(BookSpecification.filterSpecification(dto))
-                .stream().map(bookMapper::toDTO).collect(Collectors.toSet());
+    public Page<BookResponseDTO> findAll(BookFilterDTO dto, Pageable pageable) {
+        return bookRepository.findAll(BookSpecification.filterSpecification(dto), pageable)
+                .map(bookMapper::toDTO);
     }
 
     @Transactional

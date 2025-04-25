@@ -11,6 +11,8 @@ import io.library.api.application.specifications.AuthorSpecification;
 import io.library.api.domain.entities.Author;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -40,9 +42,9 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    public Set<AuthorResponseDTO> findAll(AuthorFilterDTO dto) {
-        return authorRepository.findAll(AuthorSpecification.filterSpecification(dto))
-                .stream().map(authorMapper::toDTO).collect(Collectors.toSet());
+    public Page<AuthorResponseDTO> findAll(AuthorFilterDTO dto, Pageable pageable) {
+        return authorRepository.findAll(AuthorSpecification.filterSpecification(dto), pageable)
+                .map(authorMapper::toDTO);
     }
 
     @Transactional

@@ -6,6 +6,10 @@ import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.application.services.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,8 +35,10 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<AuthorResponseDTO>> getAll(@ModelAttribute AuthorFilterDTO request) {
-        return ResponseEntity.ok().body(authorService.findAll(request));
+    public ResponseEntity<Page<AuthorResponseDTO>> getAll(@ModelAttribute AuthorFilterDTO request,
+                                                          @PageableDefault(size = 10, page = 0, sort = "name",
+                                                                 direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok().body(authorService.findAll(request, pageable));
     }
 
     @GetMapping("/{name}")
