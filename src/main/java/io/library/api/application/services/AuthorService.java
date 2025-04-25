@@ -57,10 +57,8 @@ public class AuthorService {
     public void updateByName(AuthorRequestDTO dto) {
         Author author = authorRepository.findByNameContaining(dto.name())
                 .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
-
-        Author newAuthor = authorMapper.toDomain(dto);
-        newAuthor.setId(author.getId());
-        authorRepository.save(newAuthor);
+        authorMapper.updateAuthorFromDTO(dto, author);
+        authorRepository.save(author);
     }
 
 }

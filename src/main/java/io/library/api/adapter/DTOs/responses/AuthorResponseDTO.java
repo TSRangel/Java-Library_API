@@ -1,8 +1,5 @@
 package io.library.api.adapter.DTOs.responses;
 
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;

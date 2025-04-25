@@ -6,6 +6,8 @@ import io.library.api.domain.entities.Book;
 import io.library.api.domain.valueObjects.ISBN;
 import io.library.api.domain.valueObjects.Price;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 import java.math.BigDecimal;
@@ -16,6 +18,8 @@ import java.math.BigDecimal;
 public interface BookMapper {
     Book toDomain(BookRequestDTO dto);
     BookResponseDTO toDTO(Book book);
+    @Mapping(target = "title", ignore = true)
+    void updateBookFromDTO(BookRequestDTO dto, @MappingTarget Book book);
 
     default String map(ISBN isbn) {
         return isbn.value();

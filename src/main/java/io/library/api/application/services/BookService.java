@@ -65,10 +65,9 @@ public class BookService {
         Book book = bookRepository.findByTitleContaining(dto.title())
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
-        Book newBook = bookMapper.toDomain(dto);
+        bookMapper.updateBookFromDTO(dto, book);
         Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
-        newBook.setAuthor(author);
-        newBook.setId(book.getId());
-        bookRepository.save(newBook);
+        book.setAuthor(author);
+        bookRepository.save(book);
     }
 }
