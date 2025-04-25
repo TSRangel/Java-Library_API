@@ -11,6 +11,7 @@ import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import io.library.api.application.specifications.BookSpecification;
 import io.library.api.domain.entities.Author;
 import io.library.api.domain.entities.Book;
+import io.library.api.domain.valueObjects.ISBN;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class BookService {
     public BookResponseDTO create(BookRequestDTO request) {
         Book newBook = bookMapper.toDomain(request);
 
-        if(bookRepository.findByTitleContaining(newBook.getTitle()).isPresent()) {
+        if(bookRepository.findByIsbn(new ISBN(request.isbn())).isPresent()) {
             throw new ResourceAlreadyExistsException("Livro já registrado.");
         }
 
@@ -41,8 +42,8 @@ public class BookService {
         return bookMapper.toDTO(newBook);
     }
 
-    public BookResponseDTO findByTitle(String title) {
-        Book book = bookRepository.findByTitleContaining(title)
+    public BookResponseDTO findByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(new ISBN(isbn))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
         return bookMapper.toDTO(book);
     }
@@ -53,10 +54,10 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteByTitle(String title) {
-        Optional<Book> book = bookRepository.findByTitleContaining(title);
+    public void deleteByIsbn(String isbn) {
+        Optional<Book> book = bookRepository.findByIsbn(new ISBN(isbn));
 
-        if(!book.isPresent()) {
+        if(book.isEmpty()) {
             throw new ResourceNotFoundException("Livro não encontrado nos registros.");
         }
 
@@ -64,8 +65,8 @@ public class BookService {
     }
 
     @Transactional
-    public void updateByName(BookRequestDTO dto) {
-        Book book = bookRepository.findByTitleContaining(dto.title())
+    public void updateByIsbn(BookRequestDTO dto) {
+        Book book = bookRepository.findByIsbn(new ISBN(dto.isbn()))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
         bookMapper.updateBookFromDTO(dto, book);

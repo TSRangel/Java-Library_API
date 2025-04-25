@@ -35,20 +35,20 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.findAll(request));
     }
 
-    @GetMapping("/{title}")
-    public ResponseEntity<BookResponseDTO> getBookByTitle(@PathVariable String title) {
-        return ResponseEntity.ok().body(bookService.findByTitle(title));
+    @GetMapping("/{isbn}")
+    public ResponseEntity<BookResponseDTO> getBookByIsbn(@PathVariable String isbn) {
+        return ResponseEntity.ok().body(bookService.findByIsbn(isbn));
     }
 
-    @DeleteMapping("/{title}")
-    public ResponseEntity<Void> deleteByTitle(@PathVariable String title) {
-        bookService.deleteByTitle(title);
+    @DeleteMapping("/{isbn}")
+    public ResponseEntity<Void> deleteByIsbn(@PathVariable String isbn) {
+        bookService.deleteByIsbn(isbn);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody @Valid BookRequestDTO request) {
-        bookService.updateByName(request);
+        bookService.updateByIsbn(request);
         return ResponseEntity.noContent().build();
     }
 }
