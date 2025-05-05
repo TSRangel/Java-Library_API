@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,18 +25,14 @@ public class AuthorController {
     @PostMapping
     public ResponseEntity<Void> createAuthor(@RequestBody @Valid AuthorRequestDTO request) {
         AuthorResponseDTO newAuthor = authorService.create(request);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{name}")
-                .buildAndExpand(newAuthor.name())
-                .toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{name}").buildAndExpand(newAuthor.name()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping
     public ResponseEntity<Page<AuthorResponseDTO>> getAll(@ModelAttribute AuthorFilterDTO request,
                                                           @PageableDefault(size = 10, page = 0, sort = "name",
-                                                                 direction = Sort.Direction.ASC) Pageable pageable) {
+                                                                  direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok().body(authorService.findAll(request, pageable));
     }
 

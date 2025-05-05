@@ -1,4 +1,4 @@
-package io.library.api.application.repositories;
+package io.library.api.adapter.repositories;
 
 import io.library.api.domain.entities.Author;
 import org.springframework.data.jpa.repository.JpaRepository;

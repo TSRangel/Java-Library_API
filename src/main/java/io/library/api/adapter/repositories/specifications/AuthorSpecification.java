@@ -1,4 +1,4 @@
-package io.library.api.application.specifications;
+package io.library.api.adapter.repositories.specifications;
 
 import io.library.api.adapter.DTOs.requests.AuthorFilterDTO;
 import io.library.api.domain.entities.Author;

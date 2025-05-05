@@ -1,4 +1,4 @@
-package io.library.api.application.repositories;
+package io.library.api.adapter.repositories;
 
 import io.library.api.domain.entities.Book;
 import io.library.api.domain.valueObjects.ISBN;

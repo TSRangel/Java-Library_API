@@ -15,6 +15,8 @@ public record BookResponseDTO(
         LocalDate publicationDate,
         Genre genre,
         Double price,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", timezone = "GMT")
         LocalDateTime createdAt,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", timezone = "GMT")
         LocalDateTime updatedAt
 ) {}

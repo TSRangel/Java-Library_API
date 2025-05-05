@@ -1,11 +1,9 @@
 package io.library.api.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.library.api.domain.enums.Genre;
 import io.library.api.domain.valueObjects.ISBN;
 import io.library.api.domain.valueObjects.Price;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +15,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@SuperBuilder(toBuilder = true)
+@SuperBuilder
 @Entity
 @Table(name = "tb_book")
 public class Book extends BaseEntity{
