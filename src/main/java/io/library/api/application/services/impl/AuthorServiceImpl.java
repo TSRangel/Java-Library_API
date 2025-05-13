@@ -24,6 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
+    @Override
     @Transactional
     public AuthorResponseDTO create(AuthorRequestDTO dto) {
         Author newAuthor = authorMapper.toDomain(dto);
@@ -35,17 +36,20 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.toDTO(newAuthor);
     }
 
+    @Override
     public AuthorResponseDTO findByName(String name) {
         Author author = authorRepository.findByNameContaining(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
         return authorMapper.toDTO(author);
     }
 
+    @Override
     public Page<AuthorResponseDTO> findAll(AuthorFilterDTO dto, Pageable pageable) {
         return authorRepository.findAll(AuthorSpecification.filterSpecification(dto), pageable)
                 .map(authorMapper::toDTO);
     }
 
+    @Override
     @Transactional
     public void deleteByName(String name) {
         Optional<Author> author = authorRepository.findByNameContaining(name);
@@ -57,6 +61,7 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.delete(author.get());
     }
 
+    @Override
     @Transactional
     public void updateByName(AuthorRequestDTO dto) {
         Author author = authorRepository.findByNameContaining(dto.name())

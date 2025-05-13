@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    BookResponseDTO create(BookRequestDTO request);
+    BookResponseDTO create(BookRequestDTO dto);
     BookResponseDTO findByIsbn(String isbn);
     Page<BookResponseDTO> findAll(BookFilterDTO dto, Pageable pageable);
     void deleteByIsbn(String isbn);

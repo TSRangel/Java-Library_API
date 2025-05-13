@@ -1,14 +1,11 @@
 package io.library.api.domain.entities;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
-import io.library.api.domain.enums.Role;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Type;
 
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -19,11 +16,20 @@ import java.util.Set;
 @Table(name = "tb_user")
 public class User extends BaseEntity{
     @Column(nullable = false)
-    private String Login;
+    private String login;
     @Column(nullable = false)
-    private String Password;
-    @Enumerated(value = EnumType.STRING)
-    @Type(ListArrayType.class)
-    @Column(columnDefinition = "varchar[]")
-    private Set<Role> roles;
+    private String password;
+    @Setter(AccessLevel.NONE)
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "tb_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 }

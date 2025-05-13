@@ -27,23 +27,26 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "/authors/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.DELETE, "/authors/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.PUT, "/authors/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.GET, "/authors/**").hasAnyRole("USER", "ADMIN");
-                    authorize.requestMatchers(HttpMethod.POST, "/books/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN");
-                    authorize.requestMatchers(HttpMethod.GET, "/books/**").hasAnyRole("USER", "ADMIN");
+                    authorize.requestMatchers(HttpMethod.POST, "/authors/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/authors/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.PUT, "/authors/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.GET, "/authors/**").hasAnyRole("EMPLOYEE", "MANAGER");
+                    authorize.requestMatchers(HttpMethod.POST, "/books/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/books/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.PUT, "/books/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.GET, "/books/**").hasAnyRole("EMPLOYEE", "MANAGER");
+                    authorize.requestMatchers(HttpMethod.POST, "/users/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.PUT, "/users/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("EMPLOYEE", "MANAGER");
+                    authorize.requestMatchers(HttpMethod.POST, "/roles/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/roles/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.PUT, "/roles/**").hasRole("MANAGER");
+                    authorize.requestMatchers(HttpMethod.GET, "/roles/**").hasAnyRole("EMPLOYEE", "MANAGER");
 
                     authorize.anyRequest().authenticated();
                 })
                 .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -57,7 +60,7 @@ public class SecurityConfig {
         UserDetails user2 = User.builder()
                 .username("admin")
                 .password(encoder.encode("123"))
-                .roles("ADMIN")
+                .roles("MANAGER")
                 .build();
 
         return new InMemoryUserDetailsManager(user1, user2);

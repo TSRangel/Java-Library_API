@@ -7,13 +7,10 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         uses = {BookMapper.class},
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuthorMapper {
     Author toDomain(AuthorRequestDTO dto);
     Author toDomainFromResponseDTO(AuthorResponseDTO dto);
     AuthorResponseDTO toDTO(Author author);
-    @Mapping(target = "name", ignore = true)
     void updateAuthorFromDTO(AuthorRequestDTO dto, @MappingTarget Author author);
 }

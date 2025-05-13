@@ -4,6 +4,7 @@ import io.library.api.adapter.DTOs.requests.BookFilterDTO;
 import io.library.api.adapter.DTOs.requests.BookRequestDTO;
 import io.library.api.adapter.DTOs.responses.BookResponseDTO;
 import io.library.api.application.services.BookService;
+import io.library.api.domain.valueObjects.ISBN;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,13 +47,13 @@ public class BookController {
     }
 
     @DeleteMapping("/{isbn}")
-    public ResponseEntity<Void> delete(@PathVariable String isbn) {
+    public ResponseEntity<Void> deleteByIsbn(@PathVariable String isbn) {
         bookService.deleteByIsbn(isbn);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody @Valid BookRequestDTO request) {
+    @PutMapping("/{isbn}")
+    public ResponseEntity<Void> updateByIsbn(@RequestBody @Valid BookRequestDTO request) {
         bookService.updateByIsbn(request);
         return ResponseEntity.noContent().build();
     }

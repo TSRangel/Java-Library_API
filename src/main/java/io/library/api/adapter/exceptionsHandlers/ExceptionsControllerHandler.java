@@ -15,16 +15,16 @@ import java.util.HashMap;
 
 @RestControllerAdvice
 public class ExceptionsControllerHandler {
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<StandartError>  standartError(RuntimeException e, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        return ResponseEntity.status(status).body(new StandartError(
-                status.value(),
-                "Algo inesperado aconteceu. Por favor contate o suporte.",
-                request.getRequestURI()
-        ));
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<StandartError>  standartError(RuntimeException e, HttpServletRequest request) {
+//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+//
+//        return ResponseEntity.status(status).body(new StandartError(
+//                status.value(),
+//                "Algo inesperado aconteceu. Por favor contate o suporte.",
+//                request.getRequestURI()
+//        ));
+//    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandartError> notFound(ResourceNotFoundException e, HttpServletRequest request) {

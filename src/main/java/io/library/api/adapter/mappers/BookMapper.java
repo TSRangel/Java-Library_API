@@ -5,20 +5,15 @@ import io.library.api.adapter.DTOs.responses.BookResponseDTO;
 import io.library.api.domain.entities.Book;
 import io.library.api.domain.valueObjects.ISBN;
 import io.library.api.domain.valueObjects.Price;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 import java.math.BigDecimal;
 
 @Mapper(componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookMapper {
     Book toDomain(BookRequestDTO dto);
     BookResponseDTO toDTO(Book book);
-    @Mapping(target = "title", ignore = true)
     void updateBookFromDTO(BookRequestDTO dto, @MappingTarget Book book);
 
     default String map(ISBN isbn) {

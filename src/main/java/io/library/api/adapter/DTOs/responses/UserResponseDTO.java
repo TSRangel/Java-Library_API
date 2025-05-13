@@ -2,21 +2,17 @@ package io.library.api.adapter.DTOs.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public record AuthorResponseDTO(
+public record UserResponseDTO(
         UUID id,
-        String name,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "GMT")
-        LocalDate birthDate,
-        String nationality,
+        String login,
+        Set<RoleResponseDTO> roles,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT")
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "GMT")
-        LocalDateTime updatedAt,
-        Set<BookResponseDTO> books
-) {}
-
+        LocalDateTime updatedAt
+) {
+}

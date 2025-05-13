@@ -7,12 +7,13 @@ import io.library.api.adapter.mappers.AuthorMapper;
 import io.library.api.adapter.mappers.BookMapper;
 import io.library.api.adapter.repositories.BookRepository;
 import io.library.api.adapter.repositories.specifications.BookSpecification;
-import io.library.api.domain.entities.Author;
-import io.library.api.domain.entities.Book;
-import io.library.api.domain.valueObjects.ISBN;
+import io.library.api.application.services.AuthorService;
 import io.library.api.application.services.BookService;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
+import io.library.api.domain.entities.Author;
+import io.library.api.domain.entities.Book;
+import io.library.api.domain.valueObjects.ISBN;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,35 +26,39 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final AuthorServiceImpl authorServiceImpl;
+    private final AuthorService authorService;
     private final BookMapper bookMapper;
     private final AuthorMapper authorMapper;
 
+    @Override
     @Transactional
-    public BookResponseDTO create(BookRequestDTO request) {
-        Book newBook = bookMapper.toDomain(request);
+    public BookResponseDTO create(BookRequestDTO dto) {
+        Book newBook = bookMapper.toDomain(dto);
 
-        if(bookRepository.findByIsbn(new ISBN(request.isbn())).isPresent()) {
+        if(bookRepository.findByIsbn(new ISBN(dto.isbn())).isPresent()) {
             throw new ResourceAlreadyExistsException("Livro já registrado.");
         }
 
-        Author author = authorMapper.toDomainFromResponseDTO(authorServiceImpl.findByName(request.authorName()));
+        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
         newBook.setAuthor(author);
         bookRepository.save(newBook);
         return bookMapper.toDTO(newBook);
     }
 
+    @Override
     public BookResponseDTO findByIsbn(String isbn) {
         Book book = bookRepository.findByIsbn(new ISBN(isbn))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
         return bookMapper.toDTO(book);
     }
 
+    @Override
     public Page<BookResponseDTO> findAll(BookFilterDTO dto, Pageable pageable) {
         return bookRepository.findAll(BookSpecification.filterSpecification(dto), pageable)
                 .map(bookMapper::toDTO);
     }
 
+    @Override
     @Transactional
     public void deleteByIsbn(String isbn) {
         Optional<Book> book = bookRepository.findByIsbn(new ISBN(isbn));
@@ -65,13 +70,14 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(book.get());
     }
 
+    @Override
     @Transactional
     public void updateByIsbn(BookRequestDTO dto) {
         Book book = bookRepository.findByIsbn(new ISBN(dto.isbn()))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
         bookMapper.updateBookFromDTO(dto, book);
-        Author author = authorMapper.toDomainFromResponseDTO(authorServiceImpl.findByName(dto.authorName()));
+        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
         book.setAuthor(author);
         bookRepository.save(book);
     }
