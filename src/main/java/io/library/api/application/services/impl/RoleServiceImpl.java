@@ -8,6 +8,7 @@ import io.library.api.application.services.RoleService;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import io.library.api.domain.entities.Role;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
+    @Transactional
     @Override
     public RoleResponseDTO create(RoleRequestDTO dto) {
         Role newRole = roleMapper.toDomain(dto);
@@ -47,6 +49,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(pageable).map(roleMapper::toDTO);
     }
 
+    @Transactional
     @Override
     public void update(UUID id, RoleRequestDTO dto) {
         Role role = roleRepository.findById(id)
@@ -55,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.save(role);
     }
 
+    @Transactional
     @Override
     public void deleteByName(String name) {
         Role role = roleRepository.findByName(name.toUpperCase())

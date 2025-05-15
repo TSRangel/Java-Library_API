@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "tb_role")
 public class Role extends BaseEntity{
     private String name;
-//    @Builder.Default
+    @Builder.Default
     @Setter(AccessLevel.NONE)
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
