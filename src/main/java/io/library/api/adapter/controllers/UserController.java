@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO request) {
-        UserResponseDTO newUser = userService.register(request);
+        UserResponseDTO newUser = userService.registerToDTO(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{login}").buildAndExpand(newUser.login()).toUri();
 
         return ResponseEntity.created(location).build();
@@ -49,7 +49,7 @@ public class UserController {
     @GetMapping("/{login}")
     @PreAuthorize("hasAnyRole('MANAGER', 'EMPLOYEE')")
     public ResponseEntity<UserResponseDTO> getUserByLogin(@PathVariable String login) {
-        return ResponseEntity.ok().body(userService.findByLogin(login));
+        return ResponseEntity.ok().body(userService.findByLoginToDTO(login));
     }
 
     @GetMapping

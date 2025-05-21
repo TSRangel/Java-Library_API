@@ -56,6 +56,6 @@ public class AuthorController {
     @GetMapping("/{name}")
     @PreAuthorize("hasAnyRole('MANAGER', 'EMPLOYEE')")
     public ResponseEntity<AuthorResponseDTO> getAuthorByName(@PathVariable String name) {
-        return ResponseEntity.ok().body(authorService.findByName(name));
+        return ResponseEntity.ok().body(authorService.findByNameToDTO(name));
     }
 }

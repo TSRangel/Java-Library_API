@@ -39,17 +39,21 @@ public class BookServiceImpl implements BookService {
             throw new ResourceAlreadyExistsException("Livro já registrado.");
         }
 
-        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
+        Author author = authorService.findByName(dto.authorName());
         newBook.setAuthor(author);
         bookRepository.save(newBook);
         return bookMapper.toDTO(newBook);
     }
 
     @Override
-    public BookResponseDTO findByIsbn(String isbn) {
-        Book book = bookRepository.findByIsbn(new ISBN(isbn))
+    public Book findByIsbn(String isbn) {
+        return bookRepository.findByIsbn(new ISBN(isbn))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
-        return bookMapper.toDTO(book);
+    }
+
+    @Override
+    public BookResponseDTO findByIsbnToDTO(String isbn) {
+        return bookMapper.toDTO(findByIsbn(isbn));
     }
 
     @Override
@@ -77,7 +81,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
         bookMapper.updateBookFromDTO(dto, book);
-        Author author = authorMapper.toDomainFromResponseDTO(authorService.findByName(dto.authorName()));
+        Author author = authorService.findByName(dto.authorName());
         book.setAuthor(author);
         bookRepository.save(book);
     }

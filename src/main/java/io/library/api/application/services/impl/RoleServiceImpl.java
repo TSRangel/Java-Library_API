@@ -37,11 +37,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleResponseDTO findByName(String name) {
-        Role role = roleRepository.findByName(name.toUpperCase())
+    public Role findByName(String name) {
+        return roleRepository.findByName(name.toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException("Função não encontrada no registros."));
+    }
 
-        return roleMapper.toDTO(role);
+    @Override
+    public RoleResponseDTO findByNameToDTO(String name) {
+        return roleMapper.toDTO(findByName(name));
     }
 
     @Override

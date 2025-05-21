@@ -37,10 +37,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorResponseDTO findByName(String name) {
-        Author author = authorRepository.findByNameContaining(name)
+    public Author findByName(String name) {
+        return authorRepository.findByNameContaining(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
-        return authorMapper.toDTO(author);
+    }
+
+    @Override
+    public AuthorResponseDTO findByNameToDTO(String name) {
+        return authorMapper.toDTO(findByName(name));
     }
 
     @Override

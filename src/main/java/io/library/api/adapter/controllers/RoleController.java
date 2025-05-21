@@ -49,7 +49,7 @@ public class RoleController {
     @GetMapping("/{name}")
     @PreAuthorize("hasAnyRole('MANAGER', 'EMPLOYEE')")
     public ResponseEntity<RoleResponseDTO> getByName(@PathVariable String name) {
-        return ResponseEntity.ok().body(roleService.findByName(name));
+        return ResponseEntity.ok().body(roleService.findByNameToDTO(name));
     }
 
     @GetMapping

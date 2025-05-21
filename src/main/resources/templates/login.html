@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:tm="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
     <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
         <h2 class="text-center mb-4">Login</h2>
 
-        <form method="post" th.action="@{/login}">
+        <form method="post" th:action="@{/login}">
             <div class="mb-3">
                 <label for="username" class="form-label">Endereço de Email</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu nome aqui" required>
@@ -27,10 +27,9 @@
                 <button type="submit" class="btn btn-primary">Entrar</button>
             </div>
         </form>
-
-        <div class="text-center mt-3">
-            <small>Não tem uma conta? <a href="#">Cadastre-se</a></small>
-        </div>
+        <br />
+        <hr />
+        <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary">Entrar com Google</a>
     </div>
 </div>
 

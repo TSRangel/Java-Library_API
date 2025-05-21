@@ -2,13 +2,16 @@ package io.library.api.application.services;
 
 import io.library.api.adapter.DTOs.requests.UserRequestDTO;
 import io.library.api.adapter.DTOs.responses.UserResponseDTO;
+import io.library.api.domain.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 
 public interface UserService {
-    UserResponseDTO register(UserRequestDTO dto);
-    UserResponseDTO findByLogin(String login);
+    User register(User user);
+    UserResponseDTO registerToDTO(UserRequestDTO dto);
+    User findByLogin(String login);
+    UserResponseDTO findByLoginToDTO(String login);
     Page<UserResponseDTO> findAll(Pageable pageable);
     void update(UserRequestDTO dto);
     void deleteByLogin(String login);

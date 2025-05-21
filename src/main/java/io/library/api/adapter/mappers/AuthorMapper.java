@@ -10,7 +10,6 @@ import org.mapstruct.*;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuthorMapper {
     Author toDomain(AuthorRequestDTO dto);
-    Author toDomainFromResponseDTO(AuthorResponseDTO dto);
     AuthorResponseDTO toDTO(Author author);
     void updateAuthorFromDTO(AuthorRequestDTO dto, @MappingTarget Author author);
 }

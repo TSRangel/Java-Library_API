@@ -61,6 +61,6 @@ public class BookController {
     @GetMapping("/{isbn}")
     @PreAuthorize("hasAnyRole('MANAGER', 'EMPLOYEE')")
     public ResponseEntity<BookResponseDTO> getBookByIsbn(@PathVariable String isbn) {
-        return ResponseEntity.ok().body(bookService.findByIsbn(isbn));
+        return ResponseEntity.ok().body(bookService.findByIsbnToDTO(isbn));
     }
 }

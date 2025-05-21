@@ -1,15 +1,18 @@
 package io.library.api.config;
 
+import io.library.api.adapter.mappers.UserMapper;
 import io.library.api.adapter.repositories.UserRepository;
+import io.library.api.application.services.UserService;
 import io.library.api.application.services.security.CustomUserDetailsService;
+import io.library.api.application.services.security.SocialLoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SocialLoginSuccessHandler socialLoginSuccessHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(configurer -> configurer
@@ -42,14 +45,17 @@ public class SecurityConfig {
 //                    authorize.requestMatchers(HttpMethod.DELETE, "/roles/**").hasRole("MANAGER");
 //                    authorize.requestMatchers(HttpMethod.PUT, "/roles/**").hasRole("MANAGER");
 //                    authorize.requestMatchers(HttpMethod.GET, "/roles/**").hasAnyRole("EMPLOYEE", "MANAGER");
-
                     authorize.anyRequest().authenticated();
+                })
+                .oauth2Login(oauth -> {
+                    oauth.loginPage("/login");
+                    oauth.successHandler(socialLoginSuccessHandler);
                 })
                 .build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//    @Bean
+    public UserDetailsService userDetailsService(UserService userService) {
 //        UserDetails user1 = User.builder()
 //                .username("user")
 //                .password(encoder.encode("123"))
@@ -63,6 +69,11 @@ public class SecurityConfig {
 //                .build();
 //
 //        return new InMemoryUserDetailsManager(user1, user2);
-        return new CustomUserDetailsService(userRepository);
+        return new CustomUserDetailsService(userService);
+    }
+
+    @Bean
+    public GrantedAuthorityDefaults authorityDefaults() {
+        return new GrantedAuthorityDefaults("");
     }
 }

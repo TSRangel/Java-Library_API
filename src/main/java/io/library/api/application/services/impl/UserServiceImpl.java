@@ -7,6 +7,7 @@ import io.library.api.adapter.mappers.UserMapper;
 import io.library.api.adapter.repositories.UserRepository;
 import io.library.api.application.services.RoleService;
 import io.library.api.application.services.UserService;
+import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import io.library.api.domain.entities.Role;
 import io.library.api.domain.entities.User;
@@ -24,17 +25,21 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final PasswordEncoder encoder;
     private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
 
     @Transactional
     @Override
-    public UserResponseDTO register(UserRequestDTO dto) {
+    public UserResponseDTO registerToDTO(UserRequestDTO dto) {
         User newUser = userMapper.toDomain(dto);
+
+        if(userRepository.findByLogin(newUser.getLogin()).isPresent()) {
+            throw new ResourceAlreadyExistsException("Usuário já registrado.");
+        }
+
         String password = newUser.getPassword();
         newUser.setPassword(encoder.encode(password));
 
         for(String role : dto.roles()) {
-            Role searchedRole = roleMapper.toDomainFromResponseDTO(roleService.findByName(role));
+            Role searchedRole = roleService.findByName(role);
             newUser.addRole(searchedRole);
         }
         userRepository.save(newUser);
@@ -42,11 +47,28 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDTO(newUser);
     }
 
+    @Transactional
     @Override
-    public UserResponseDTO findByLogin(String login) {
-        User user = userRepository.findByLogin(login)
+    public User register(User user) {
+        if(userRepository.findByLogin(user.getLogin()).isPresent()) {
+            throw new ResourceAlreadyExistsException("Usuário já registrado.");
+        }
+
+        String password = user.getPassword();
+        user.setPassword(encoder.encode(password));
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado nos registros."));
-        return userMapper.toDTO(user);
+    }
+
+    @Override
+    public UserResponseDTO findByLoginToDTO(String login) {
+        return userMapper.toDTO(findByLogin(login));
     }
 
     @Override

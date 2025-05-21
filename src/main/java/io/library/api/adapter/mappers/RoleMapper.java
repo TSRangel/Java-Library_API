@@ -12,7 +12,6 @@ import org.mapstruct.ReportingPolicy;
 public interface RoleMapper {
     RoleResponseDTO toDTO(Role role);
     Role toDomain(RoleRequestDTO dto);
-    Role toDomainFromResponseDTO(RoleResponseDTO dto);
     void updateRoleFromDTO(RoleRequestDTO dto, @MappingTarget Role role);
 
     default String map(Role role) {
