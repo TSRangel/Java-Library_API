@@ -32,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
             throw new ResourceAlreadyExistsException("Função já registrada.");
         }
 
-        roleRepository.save(newRole);
+        newRole = roleRepository.save(newRole);
         return roleMapper.toDTO(newRole);
     }
 
@@ -54,18 +54,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public void update(UUID id, RoleRequestDTO dto) {
+    public RoleResponseDTO update(UUID id, RoleRequestDTO dto) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Função não encontrada nos registros."));
         roleMapper.updateRoleFromDTO(dto, role);
         roleRepository.save(role);
+        return roleMapper.toDTO(role);
     }
 
     @Transactional
     @Override
-    public void deleteByName(String name) {
+    public RoleResponseDTO deleteByName(String name) {
         Role role = roleRepository.findByName(name.toUpperCase())
                 .orElseThrow(() -> new ResourceNotFoundException("Função não encontrada nos registros."));
         roleRepository.delete(role);
+        return roleMapper.toDTO(role);
     }
 }

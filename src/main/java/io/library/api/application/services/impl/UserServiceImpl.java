@@ -2,7 +2,6 @@ package io.library.api.application.services.impl;
 
 import io.library.api.adapter.DTOs.requests.UserRequestDTO;
 import io.library.api.adapter.DTOs.responses.UserResponseDTO;
-import io.library.api.adapter.mappers.RoleMapper;
 import io.library.api.adapter.mappers.UserMapper;
 import io.library.api.adapter.repositories.UserRepository;
 import io.library.api.application.services.RoleService;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
             Role searchedRole = roleService.findByName(role);
             newUser.addRole(searchedRole);
         }
-        userRepository.save(newUser);
+        newUser = userRepository.save(newUser);
 
         return userMapper.toDTO(newUser);
     }
@@ -78,19 +77,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(UserRequestDTO dto) {
+    public UserResponseDTO update(UserRequestDTO dto) {
         User user = userRepository.findByLogin(dto.login())
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado nos registros."));
         userMapper.updateUserFromDTO(dto, user);
         user.setPassword(encoder.encode(dto.password()));
         userRepository.save(user);
+        return userMapper.toDTO(user);
     }
 
     @Transactional
     @Override
-    public void deleteByLogin(String login) {
+    public UserResponseDTO deleteByLogin(String login) {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado nos registros."));
         userRepository.delete(user);
+        return userMapper.toDTO(user);
     }
 }

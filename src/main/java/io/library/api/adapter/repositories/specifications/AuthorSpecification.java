@@ -19,7 +19,7 @@ public class AuthorSpecification {
 
     public static Specification<Author> nationalityEqual(String nationality) {
         return (root, query, cb) ->
-                cb.equal(root.get("nationality"), nationality);
+                cb.equal(cb.lower(root.get("nationality")), nationality.toLowerCase());
     }
 
     public static Specification<Author> hasBook(String bookTitle) {

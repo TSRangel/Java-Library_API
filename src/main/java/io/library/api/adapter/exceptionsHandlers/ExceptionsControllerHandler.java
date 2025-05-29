@@ -3,6 +3,7 @@ package io.library.api.adapter.exceptionsHandlers;
 import io.library.api.adapter.exceptionsHandlers.errors.FieldError;
 import io.library.api.adapter.exceptionsHandlers.errors.StandartError;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
+import io.library.api.application.services.exceptions.ResourceHasDependencies;
 import io.library.api.application.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -42,13 +43,25 @@ public class ExceptionsControllerHandler {
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<StandartError> alreadyExists(ResourceAlreadyExistsException e, HttpServletRequest request) {
-        HttpStatus status= HttpStatus.BAD_REQUEST;
+        HttpStatus status= HttpStatus.CONFLICT;
 
         return ResponseEntity.status(status)
                 .body(new StandartError(
                     status.value(),
                     e.getMessage(),
                     request.getRequestURI()
+                ));
+    }
+
+    @ExceptionHandler(ResourceHasDependencies.class)
+    public ResponseEntity<StandartError> hasDependencies(ResourceHasDependencies e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        return ResponseEntity.status(status)
+                .body(new StandartError(
+                        status.value(),
+                        e.getMessage(),
+                        request.getRequestURI()
                 ));
     }
 

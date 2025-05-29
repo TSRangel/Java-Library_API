@@ -28,7 +28,6 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final BookMapper bookMapper;
-    private final AuthorMapper authorMapper;
 
     @Override
     @Transactional
@@ -41,7 +40,7 @@ public class BookServiceImpl implements BookService {
 
         Author author = authorService.findByName(dto.authorName());
         newBook.setAuthor(author);
-        bookRepository.save(newBook);
+        newBook = bookRepository.save(newBook);
         return bookMapper.toDTO(newBook);
     }
 
@@ -64,19 +63,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteByIsbn(String isbn) {
-        Optional<Book> book = bookRepository.findByIsbn(new ISBN(isbn));
+    public BookResponseDTO deleteByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(new ISBN(isbn))
+                .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
-        if(book.isEmpty()) {
-            throw new ResourceNotFoundException("Livro não encontrado nos registros.");
-        }
-
-        bookRepository.delete(book.get());
+        bookRepository.delete(book);
+        return bookMapper.toDTO(book);
     }
 
     @Override
     @Transactional
-    public void updateByIsbn(BookRequestDTO dto) {
+    public BookResponseDTO updateByIsbn(BookRequestDTO dto) {
         Book book = bookRepository.findByIsbn(new ISBN(dto.isbn()))
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado nos registros."));
 
@@ -84,5 +81,6 @@ public class BookServiceImpl implements BookService {
         Author author = authorService.findByName(dto.authorName());
         book.setAuthor(author);
         bookRepository.save(book);
+        return bookMapper.toDTO(book);
     }
 }

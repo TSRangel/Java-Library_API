@@ -12,6 +12,6 @@ public interface BookService {
     Book findByIsbn(String isbn);
     BookResponseDTO findByIsbnToDTO(String isbn);
     Page<BookResponseDTO> findAll(BookFilterDTO dto, Pageable pageable);
-    void deleteByIsbn(String isbn);
-    void updateByIsbn(BookRequestDTO dto);
+    BookResponseDTO deleteByIsbn(String isbn);
+    BookResponseDTO updateByIsbn(BookRequestDTO dto);
 }

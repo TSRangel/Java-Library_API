@@ -12,6 +12,6 @@ public interface AuthorService {
     Author findByName(String name);
     AuthorResponseDTO findByNameToDTO(String name);
     Page<AuthorResponseDTO> findAll(AuthorFilterDTO dto, Pageable pageable);
-    void deleteByName(String name);
-    void updateByName(AuthorRequestDTO dto);
+    AuthorResponseDTO deleteByName(String name);
+    AuthorResponseDTO updateByName(AuthorRequestDTO dto);
 }

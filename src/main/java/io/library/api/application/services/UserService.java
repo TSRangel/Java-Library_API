@@ -13,6 +13,6 @@ public interface UserService {
     User findByLogin(String login);
     UserResponseDTO findByLoginToDTO(String login);
     Page<UserResponseDTO> findAll(Pageable pageable);
-    void update(UserRequestDTO dto);
-    void deleteByLogin(String login);
+    UserResponseDTO update(UserRequestDTO dto);
+    UserResponseDTO deleteByLogin(String login);
 }

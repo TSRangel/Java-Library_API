@@ -13,6 +13,6 @@ public interface RoleService {
     Role findByName(String name);
     RoleResponseDTO findByNameToDTO(String name);
     Page<RoleResponseDTO> findAll(Pageable pageable);
-    void update(UUID id,RoleRequestDTO dto);
-    void deleteByName(String name);
+    RoleResponseDTO update(UUID id,RoleRequestDTO dto);
+    RoleResponseDTO deleteByName(String name);
 }

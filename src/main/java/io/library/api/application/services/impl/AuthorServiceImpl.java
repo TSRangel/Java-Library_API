@@ -6,6 +6,7 @@ import io.library.api.adapter.DTOs.responses.AuthorResponseDTO;
 import io.library.api.adapter.mappers.AuthorMapper;
 import io.library.api.adapter.repositories.AuthorRepository;
 import io.library.api.adapter.repositories.specifications.AuthorSpecification;
+import io.library.api.application.services.exceptions.ResourceHasDependencies;
 import io.library.api.domain.entities.Author;
 import io.library.api.application.services.AuthorService;
 import io.library.api.application.services.exceptions.ResourceAlreadyExistsException;
@@ -29,16 +30,16 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorResponseDTO create(AuthorRequestDTO dto) {
         Author newAuthor = authorMapper.toDomain(dto);
 
-        if(authorRepository.findByNameContaining(newAuthor.getName()).isPresent()) {
+        if (authorRepository.findOne(AuthorSpecification.nameLike(newAuthor.getName())).isPresent()) {
             throw new ResourceAlreadyExistsException("Author já registrado.");
         }
-        authorRepository.save(newAuthor);
+        newAuthor = authorRepository.save(newAuthor);
         return authorMapper.toDTO(newAuthor);
     }
 
     @Override
     public Author findByName(String name) {
-        return authorRepository.findByNameContaining(name)
+        return authorRepository.findOne(AuthorSpecification.nameLike(name))
                 .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
     }
 
@@ -53,25 +54,29 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(authorMapper::toDTO);
     }
 
+
     @Override
     @Transactional
-    public void deleteByName(String name) {
-        Optional<Author> author = authorRepository.findByNameContaining(name);
+    public AuthorResponseDTO deleteByName(String name) {
+        Author author = authorRepository.findOne(AuthorSpecification.nameLike(name))
+                .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
 
-        if(author.isEmpty()) {
-            throw new ResourceNotFoundException("Autor não encontrado nos registros.");
+        if (!author.getBooks().isEmpty()) {
+            throw new ResourceHasDependencies("Autor possui livros registrados.");
         }
 
-        authorRepository.delete(author.get());
+        authorRepository.delete(author);
+        return authorMapper.toDTO(author);
     }
 
     @Override
     @Transactional
-    public void updateByName(AuthorRequestDTO dto) {
-        Author author = authorRepository.findByNameContaining(dto.name())
+    public AuthorResponseDTO updateByName(AuthorRequestDTO dto) {
+        Author author = authorRepository.findOne(AuthorSpecification.nameLike(dto.name()))
                 .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado nos registros."));
         authorMapper.updateAuthorFromDTO(dto, author);
         authorRepository.save(author);
+        return authorMapper.toDTO(author);
     }
 
 }
