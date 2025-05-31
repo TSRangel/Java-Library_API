@@ -16,7 +16,7 @@ public class LoginController {
 
     @GetMapping("/")
     @ResponseBody
-    public String indexPage(Authentication auth) {
-        return "Olá, " + auth.getName() + "!";
+    public String indexPage() {
+        return "redirect:/swagger-ui/index.html";
     }
 }
