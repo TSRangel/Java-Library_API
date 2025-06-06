@@ -1,6 +1,9 @@
 spring:
   application:
     name: api
+  output:
+    ansi:
+      enabled: always
   datasource:
     url: jdbc:postgresql://localhost:5432/library_db
     driverClassName: org.postgresql.Driver
